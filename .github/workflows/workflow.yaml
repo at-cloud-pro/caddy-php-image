@@ -1,0 +1,40 @@
+name: workflow0
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**"
+      - "!**.md"
+  pull_request:
+    paths:
+      - "**"
+      - "!**.md"
+env:
+  PACKAGE_NAME: 'ghcr.io/archi-tektur/caddy-php'
+  PACKAGE_VERSION: '1.0.2'
+jobs:
+  job0:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Login to Docker registry
+        run: docker login 'ghcr.io' --username='archi-tektur' --password='${{ secrets.GITHUB_TOKEN }}'
+
+      - name: Set Git user
+        run: |
+          git config --global user.name 'Github Actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Clone Git repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t ${{ env.PACKAGE_NAME}}:${{ env.PACKAGE_VERSION }} .
+
+      - if: github.event_name == 'push'
+        name: Publish Docker images
+        run: docker push ${{ env.PACKAGE_NAME}}:${{ env.PACKAGE_VERSION }}
+
+      - if: github.event_name == 'push'
+        name: Publish version
+        run: git tag v${{ env.PACKAGE_VERSION }} && git push && git push --tags
