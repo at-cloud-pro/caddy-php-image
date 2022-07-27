@@ -1,4 +1,4 @@
-FROM php:8.1-fpm AS rte
+FROM php:8.1-fpm AS caddy_image
 # $ cat /etc/passwd | grep 'www-data'
 # www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
 # $ cat /etc/group | grep 'www-data'
@@ -85,8 +85,7 @@ EXPOSE 8080 9000
 HEALTHCHECK NONE
 WORKDIR /app
 
-
-FROM rte AS sdk
+FROM caddy_image AS caddy_php_image
 
 # Install Composer bash completion
 RUN apt-get update && apt-get install --yes --no-install-recommends \
@@ -109,4 +108,3 @@ COPY ./etc/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 ENV XDEBUG_MODE="off"
 ENV XDEBUG_CONFIG=""
 ENV XDEBUG_OUTPUT_DIR="/tmp"
-
