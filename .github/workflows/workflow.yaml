@@ -31,10 +31,10 @@ jobs:
       - name: Build Docker image
         run: docker build -t ${{ env.PACKAGE_NAME}}:${{ env.PACKAGE_VERSION }} .
 
-      - if: github.event_name == 'push'
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         name: Publish Docker images
         run: docker push ${{ env.PACKAGE_NAME}}:${{ env.PACKAGE_VERSION }}
 
-      - if: github.event_name == 'push'
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         name: Publish version
         run: git tag v${{ env.PACKAGE_VERSION }} && git push && git push --tags
