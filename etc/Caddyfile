@@ -1,0 +1,20 @@
+# Docs:
+# https://caddyserver.com/docs/caddyfile
+{
+  admin off
+  auto_https off
+  grace_period 35s
+
+  log {
+    output {$CADDY_LOG_OUTPUT}
+    format json
+    level {$CADDY_LOG_LEVEL}
+  }
+}
+
+:8080 {
+  root * /app/public
+  header -Server
+  php_fastcgi {$CADDY_CGI_SERVER_HOST}:{$CADDY_CGI_SERVER_PORT}
+  file_server
+}

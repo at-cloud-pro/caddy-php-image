@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: app
+    image: ghcr.io/archi-tektur/integrator:app-${VERSION:-1.0.1}
+    environment:
+      HTTP_API_TESTS_ENTRYPOINT: "http://app:8080"
+      # Application
+      APP_ENV: "dev"
+      APP_SECRET: "a9806d99cd5c1503d8af30c963c9411f"
+      DATABASE_URL: "mysql://user:password@mariadb:3306/integrator"
+      SYNOLOGY_HOST: "https://dysk.fibronet.pl"
+      SYNOLOGY_ACCOUNT: ""
+      SYNOLOGY_USER_FOLDER_NAME: ""
+      SYNOLOGY_PASSWORD: ""
+  mariadb:
+    image: 'mariadb:10.6'
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "integrator"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+    volumes:
+      - type: bind
+        source: .database
+        target: /var/lib/mysql
