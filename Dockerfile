@@ -1,4 +1,4 @@
-FROM php:8.1-fpm AS caddy_image
+FROM php:8.1-fpm AS base-php
 # $ cat /etc/passwd | grep 'www-data'
 # www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
 # $ cat /etc/group | grep 'www-data'
@@ -42,12 +42,7 @@ RUN rm /usr/local/etc/php-fpm.d/* /usr/local/etc/php/conf.d/* \
 && docker-php-ext-enable redis sodium
 
 # Install Composer
-RUN apt-get update && apt-get install --yes --no-install-recommends \
-  git \
-&& apt-get clean && rm -rf /var/lib/apt/lists/* \
-&& php -r 'copy("https://getcomposer.org/installer", "/usr/local/bin/composer-installer");' \
-&& php /usr/local/bin/composer-installer --install-dir=/usr/local/bin --filename=composer \
-&& rm /usr/local/bin/composer-installer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Caddy configuration
 COPY ./etc/Caddyfile /etc/caddy/Caddyfile
@@ -85,7 +80,7 @@ EXPOSE 8080 9000
 HEALTHCHECK NONE
 WORKDIR /app
 
-FROM caddy_image AS caddy_php_image
+FROM base-php AS caddy-php
 
 # Install Composer bash completion
 RUN apt-get update && apt-get install --yes --no-install-recommends \
