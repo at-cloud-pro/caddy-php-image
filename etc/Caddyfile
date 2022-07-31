@@ -1,5 +1,3 @@
-# Docs:
-# https://caddyserver.com/docs/caddyfile
 {
   admin off
   auto_https off

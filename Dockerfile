@@ -1,8 +1,4 @@
 FROM php:8.1-fpm AS base-php
-# $ cat /etc/passwd | grep 'www-data'
-# www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
-# $ cat /etc/group | grep 'www-data'
-# www-data:x:33:
 
 # Install Caddy
 RUN apt-get update && apt-get install --yes --no-install-recommends \
@@ -76,20 +72,12 @@ COPY ./etc/entrypoint.sh /entrypoint.sh
 
 # Entrypoint
 ENTRYPOINT ["bash", "/entrypoint.sh"]
+
 EXPOSE 8080 9000
 HEALTHCHECK NONE
 WORKDIR /app
 
 FROM base-php AS caddy-php
-
-# Install Composer bash completion
-RUN apt-get update && apt-get install --yes --no-install-recommends \
-  bash-completion \
-&& apt-get clean && rm -rf /var/lib/apt/lists/* \
-&& echo ". /etc/bash_completion" >> ~/.bashrc \
-&& composer global require bamarni/symfony-console-autocomplete \
-&& composer clear-cache \
-&& echo "$(php ~/.composer/vendor/bin/symfony-autocomplete --shell bash composer)" > /etc/bash_completion.d/composer
 
 # Install Xdebug
 RUN pecl install \
