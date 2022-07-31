@@ -1,4 +1,4 @@
-name: workflow0
+name: continuous-deployment
 on:
   push:
     branches:
@@ -12,13 +12,17 @@ on:
       - "!**.md"
 env:
   PACKAGE_NAME: 'ghcr.io/archi-tektur/caddy-php'
-  PACKAGE_VERSION: '1.0.3'
+  PACKAGE_VERSION: '1.0.4'
 jobs:
   job0:
     runs-on: ubuntu-22.04
     steps:
-      - name: Login to Docker registry
-        run: docker login 'ghcr.io' --username='archi-tektur' --password='${{ secrets.GITHUB_TOKEN }}'
+      - name: Login to GitHub Container Registry
+          uses: docker/login-action@v1
+          with:
+            registry: ghcr.io
+            username: ${{github.actor}}
+            password: ${{secrets.GITHUB_TOKEN}}
 
       - name: Set Git user
         run: |
