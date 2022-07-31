@@ -1,3 +1,5 @@
+[![.github/workflows/workflow.yaml](https://github.com/archi-tektur/caddy-php-image/actions/workflows/workflow.yaml/badge.svg?branch=main)](https://github.com/archi-tektur/caddy-php-image/actions/workflows/workflow.yaml)
+
 # Caddy PHP Image
 This is a scaffold image of high-performance PHP server using Caddy and php-fpm daemon. It's common image for my 
 internal and external projects as it contains all the PHP server setup and configuration in one place.
