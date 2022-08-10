@@ -50,3 +50,7 @@ In Dockerfile shown above you're just copying `app` folder, and you're all set. 
 other actions that your application requires to run - it's extensive.
 
 Last line is recommended to avoid privilege issues on files created in container by other processes.
+
+## Changelog
+Changelog is available [here](CHANGELOG.md). Please update changelog each time commission is made. I adapted 
+[semantic versioning](https://semver.org/) in this repository, and this versioning practice should be used.

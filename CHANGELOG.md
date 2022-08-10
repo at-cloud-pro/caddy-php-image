@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.1.0
+- fix Caddyfile syntax (no warning in logs is thrown)
+- fix implementation details of environment configuration on GH Actions
+
 ### v1.0.4
 - minor files review, removing files which are not required for image to run
 - remove Symfony console completion
