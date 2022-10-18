@@ -14,7 +14,7 @@ env:
   PACKAGE_NAME: 'ghcr.io/archi-tektur/caddy-php'
   PACKAGE_VERSION: '1.1.0'
 jobs:
-  job0:
+  deploy:
     runs-on: ubuntu-22.04
     steps:
       - name: Login to GitHub Container Registry
