@@ -41,4 +41,4 @@ jobs:
 
       - if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         name: Publish version
-        run: git tag v${{ env.PACKAGE_VERSION }} && git push && git push --tags
+        run: git tag ${{ env.PACKAGE_VERSION }} && git push && git push --tags
