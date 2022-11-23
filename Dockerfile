@@ -1,4 +1,4 @@
-FROM php:8.1-fpm AS base-php
+FROM php:8.1.12-fpm-buster AS base-php
 
 # Install Caddy
 RUN apt-get update && apt-get install --yes --no-install-recommends \
