@@ -1,12 +1,11 @@
-FROM php:8.1.12-fpm-buster AS base-php
+FROM php:8.1.12-fpm-buster AS rte
 
 # Install Caddy
 RUN apt-get update && apt-get install --yes --no-install-recommends \
   apt-transport-https \
-  netcat \
   debian-archive-keyring \
-  gnupg  \
   debian-keyring \
+  gnupg2 \
 && apt-get clean && rm -rf /var/lib/apt/lists/* \
 && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg \
 && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list \
@@ -14,10 +13,13 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
   caddy \
   mime-support \
 && apt-get clean && rm -rf /var/lib/apt/lists/* \
-&& rm /etc/caddy/Caddyfile
+&& rm \
+  /etc/caddy/Caddyfile
 
 # Install PHP extensions
-RUN rm /usr/local/etc/php-fpm.d/* /usr/local/etc/php/conf.d/* \
+RUN rm \
+  /usr/local/etc/php-fpm.d/* \
+  /usr/local/etc/php/conf.d/* \
 && apt-get update && apt-get install --yes --no-install-recommends \
   libicu-dev \
   libpq-dev \
@@ -35,13 +37,21 @@ RUN rm /usr/local/etc/php-fpm.d/* /usr/local/etc/php/conf.d/* \
   pdo_mysql \
   pdo_pgsql \
   zip \
-&& docker-php-ext-enable redis sodium
+&& docker-php-ext-enable \
+  redis \
+  sodium
 
 # Install Composer
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+RUN apt-get update && apt-get install --yes --no-install-recommends git
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 # Caddy configuration
 COPY ./etc/Caddyfile /etc/caddy/Caddyfile
+RUN mkdir -p /var/www/.config/caddy
+RUN chmod -R 777 /var/www/.config
+
 ENV CADDY_CGI_SERVER_HOST="127.0.0.1"
 ENV CADDY_CGI_SERVER_PORT="9000"
 ENV CADDY_LOG_OUTPUT="stderr"
@@ -67,24 +77,20 @@ ENV PHP_LOG_LEVEL="E_ERROR"
 # Composer configuration
 ENV COMPOSER_ALLOW_SUPERUSER="1"
 
-#Copy entrypoint file
-COPY ./etc/entrypoint.sh /entrypoint.sh
-
 # Entrypoint
-ENTRYPOINT ["bash", "/entrypoint.sh"]
-
-EXPOSE 8080 9000
+ENTRYPOINT []
+CMD ["bash", "-c", "php-fpm --daemonize && caddy run --config=/etc/caddy/Caddyfile"]
+EXPOSE 80 9000
 HEALTHCHECK NONE
 WORKDIR /app
 
-FROM base-php AS caddy-php
+
+FROM rte AS sdk
 
 # Install Xdebug
-RUN pecl install \
-  xdebug \
-&& pecl clear-cache \
-&& docker-php-ext-enable \
-  xdebug
+RUN pecl install xdebug
+RUN pecl clear-cache
+RUN docker-php-ext-enable xdebug
 
 # Xdebug configuration
 COPY ./etc/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini

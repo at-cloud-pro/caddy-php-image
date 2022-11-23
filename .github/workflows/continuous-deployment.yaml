@@ -14,7 +14,7 @@ env:
   PACKAGE_NAME: 'ghcr.io/archi-tektur/caddy-php'
   PACKAGE_VERSION: '2.0.0'
 jobs:
-  job0:
+  deploy:
     runs-on: ubuntu-22.04
     steps:
       - name: Login to GitHub Container Registry
@@ -41,4 +41,4 @@ jobs:
 
       - if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         name: Publish version
-        run: git tag v${{ env.PACKAGE_VERSION }} && git push && git push --tags
+        run: git tag ${{ env.PACKAGE_VERSION }} && git push && git push --tags

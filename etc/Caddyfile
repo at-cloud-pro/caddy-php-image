@@ -9,8 +9,10 @@
         level {$CADDY_LOG_LEVEL}
     }
 }
-:8080 {
+
+:80 {
     root * /app/public
+    bind 0.0.0.0
     header -Server
     php_fastcgi {$CADDY_CGI_SERVER_HOST}:{$CADDY_CGI_SERVER_PORT}
     file_server
