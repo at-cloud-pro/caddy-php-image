@@ -1,5 +1,8 @@
 # Changelog
 
+### v2.0.0
+- use Debian Buster image as a source (compatibility with linux/arm64/v8)
+
 ### v1.1.0
 - fix Caddyfile syntax (no warning in logs is thrown)
 - fix implementation details of environment configuration on GH Actions

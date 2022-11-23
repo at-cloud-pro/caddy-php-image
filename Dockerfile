@@ -1,8 +1,4 @@
-FROM php:8.1-fpm AS rte
-# $ cat /etc/passwd | grep 'www-data'
-# www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
-# $ cat /etc/group | grep 'www-data'
-# www-data:x:33:
+FROM php:8.1.12-fpm-buster AS rte
 
 # Install Caddy
 RUN apt-get update && apt-get install --yes --no-install-recommends \
