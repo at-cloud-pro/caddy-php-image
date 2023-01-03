@@ -12,13 +12,13 @@ on:
       - "!**.md"
 env:
   PACKAGE_NAME: 'ghcr.io/archi-tektur/caddy-php'
-  PACKAGE_VERSION: '2.0.0'
+  PACKAGE_VERSION: '2.1.0'
 jobs:
   deploy:
     runs-on: ubuntu-22.04
     steps:
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: archi-tektur
