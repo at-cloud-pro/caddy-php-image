@@ -1,0 +1,18 @@
+name: "release"
+on:
+  push:
+    branches: [ "main" ]
+    paths: [ "**", "!**.md" ]
+env:
+  PACKAGE_NAME: "ghcr.io/archi-tektur/caddy-php"
+  PACKAGE_VERSION: "2.2.0"
+jobs:
+  release:
+    runs-on: "ubuntu-22.04"
+    steps:
+      - { name: "Login to GitHub Container Registry", uses: "docker/login-action@v2", with: { registry: "ghcr.io", username: "archi-tektur", password: "${{secrets.GITHUB_TOKEN}}" } }
+      - { name: "Set Git user", run: "git config --global user.name Github Actions && git config --global user.email github-actions@github.com" }
+      - { name: "Clone Git repository", uses: "actions/checkout@v3" }
+      - { name: "Build Docker image with new tag", run: "docker build -t ${{ env.PACKAGE_NAME}}:${{ env.PACKAGE_VERSION }} ." }
+      - { name: "Publish Docker image", run: "docker push ${{ env.PACKAGE_NAME}}:${{ env.PACKAGE_VERSION }}" }
+      - { name: "Publish tags", run: "git tag ${{ env.PACKAGE_VERSION }} && git push && git push --tags" }
