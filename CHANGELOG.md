@@ -1,7 +1,11 @@
 # Changelog
 
+### v2.2.0
+- fix Caddyfile formatting
+
 ### v2.1.0
 - update PHP image to version 8.2
+- update CI scripts standard
 
 ### v2.0.0
 - use Debian Buster image as a source (compatibility with linux/arm64/v8)
