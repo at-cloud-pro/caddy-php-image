@@ -1,5 +1,8 @@
 # Changelog
 
+### v2.2.0
+- fix Caddyfile formatting
+
 ### v2.1.0
 - update PHP image to version 8.2
 
