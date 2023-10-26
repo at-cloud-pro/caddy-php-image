@@ -41,9 +41,7 @@ RUN rm \
 && docker-php-ext-enable \
   redis \
   sodium \
-  apcu \
-&& echo "apc.enabled=1" >> /usr/local/etc/php/conf.d/apcu.ini \
-&& echo "apc.enable_cli=1" >> /usr/local/etc/php/conf.d/apcu.ini \
+  apcu
 
 # Install Composer
 RUN apt-get update && apt-get install --yes --no-install-recommends git
@@ -74,6 +72,8 @@ ENV FPM_LOG_LEVEL="error"
 # PHP configuration
 COPY ./etc/php.ini /usr/local/etc/php/conf.d/php.ini
 ENV PHP_OPCACHE_ENABLE="true"
+COPY ./etc/apcu.ini /usr/local/etc/php/conf.d/apcu.ini
+ENV PHP_APCU_ENABLE=1
 ENV PHP_ERROR_LOG="/proc/self/fd/2"
 # E_ALL|E_STRICT|E_NOTICE|E_WARNING|E_ERROR|E_CORE_ERROR (https://www.php.net/manual/en/errorfunc.constants.php)
 ENV PHP_LOG_LEVEL="E_ERROR"
