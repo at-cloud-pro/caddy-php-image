@@ -34,12 +34,16 @@ RUN rm \
 && docker-php-ext-install \
   intl \
   opcache \
+  apcu \
   pdo_mysql \
   pdo_pgsql \
   zip \
 && docker-php-ext-enable \
   redis \
-  sodium
+  sodium \
+  apcu \
+&& echo "apc.enabled=1" >> /usr/local/etc/php/conf.d/apcu.ini \
+&& echo "apc.enable_cli=1" >> /usr/local/etc/php/conf.d/apcu.ini \
 
 # Install Composer
 RUN apt-get update && apt-get install --yes --no-install-recommends git

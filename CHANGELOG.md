@@ -1,5 +1,8 @@
 # Changelog
 
+### v2.3.0
+- install and enable php apcu extension
+
 ### v2.2.0
 - fix Caddyfile formatting
 
