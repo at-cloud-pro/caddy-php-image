@@ -30,11 +30,11 @@ RUN rm \
 && apt-get clean && rm -rf /var/lib/apt/lists/* \
 && pecl install \
   redis \
+  apcu \
 && pecl clear-cache \
 && docker-php-ext-install \
   intl \
   opcache \
-  apcu \
   pdo_mysql \
   pdo_pgsql \
   zip \
