@@ -1,6 +1,6 @@
-FROM 8.3-fpm-alpine AS rte
+FROM php:8.3-fpm-bookworm AS rte
 
-# Install Caddy
+# install caddy
 RUN apt-get update && apt-get install --yes --no-install-recommends \
   apt-transport-https \
   debian-archive-keyring \
@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
 && rm \
   /etc/caddy/Caddyfile
 
-# Install PHP extensions
+# install php extensions
 RUN rm \
   /usr/local/etc/php-fpm.d/* \
   /usr/local/etc/php/conf.d/* \
@@ -43,16 +43,17 @@ RUN rm \
   sodium \
   apcu
 
-# Install Composer
-RUN apt-get update && apt-get install --yes --no-install-recommends git
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# install composer
+RUN apt-get update  \
+&& apt-get install --yes --no-install-recommends git  \
+&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
-# Caddy configuration
+# configure caddy
 COPY ./etc/Caddyfile /etc/caddy/Caddyfile
-RUN mkdir -p /var/www/.config/caddy
-RUN chmod -R 777 /var/www/.config
+RUN mkdir -p /var/www/.config/caddy \
+&& chmod -R 777 /var/www/.config
 
 ENV CADDY_CGI_SERVER_HOST="127.0.0.1"
 ENV CADDY_CGI_SERVER_PORT="9000"
@@ -69,7 +70,7 @@ ENV FPM_ERROR_LOG="/proc/self/fd/2"
 # debug|notice|warning|error|alert (https://www.php.net/manual/en/install.fpm.configuration.php#log-level)
 ENV FPM_LOG_LEVEL="error"
 
-# PHP configuration
+# configure php
 COPY ./etc/php.ini /usr/local/etc/php/conf.d/php.ini
 ENV PHP_OPCACHE_ENABLE="true"
 COPY ./etc/apcu.ini /usr/local/etc/php/conf.d/apcu.ini
@@ -78,10 +79,10 @@ ENV PHP_ERROR_LOG="/proc/self/fd/2"
 # E_ALL|E_STRICT|E_NOTICE|E_WARNING|E_ERROR|E_CORE_ERROR (https://www.php.net/manual/en/errorfunc.constants.php)
 ENV PHP_LOG_LEVEL="E_ERROR"
 
-# Composer configuration
+# configure composer
 ENV COMPOSER_ALLOW_SUPERUSER="1"
 
-# Entrypoint
+# entrypoing
 ENTRYPOINT []
 CMD ["bash", "-c", "php-fpm --daemonize && caddy run --config=/etc/caddy/Caddyfile"]
 EXPOSE 80 9000
@@ -91,12 +92,12 @@ WORKDIR /app
 
 FROM rte AS sdk
 
-# Install Xdebug
-RUN pecl install xdebug
-RUN pecl clear-cache
-RUN docker-php-ext-enable xdebug
+# install xdebug
+RUN pecl install xdebug \
+&& pecl clear-cache \
+&& docker-php-ext-enable xdebug
 
-# Xdebug configuration
+# configure xdebug
 COPY ./etc/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 ENV XDEBUG_MODE="off"
 ENV XDEBUG_CONFIG=""
