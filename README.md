@@ -38,7 +38,7 @@ my-awesome-project
 Content of your Dockerfile:
 
 ```dockerfile
-FROM ghcr.io/archi-tektur/caddy-php:2.3.0 AS app
+FROM ghcr.io/archi-tektur/caddy-php:2.4.0 AS app
 
 COPY ./app /app
 
