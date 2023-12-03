@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.0 (2021-12-03)
+### Changed
+- update PHP image to version 8.3
+
 ### v2.3.0
 - install and enable php apcu extension
 
