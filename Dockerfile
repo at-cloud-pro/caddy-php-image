@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-buster AS rte
+FROM php:8.3-fpm-buster AS rte
 
 # Install Caddy
 RUN apt-get update && apt-get install --yes --no-install-recommends \
