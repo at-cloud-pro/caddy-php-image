@@ -4,8 +4,8 @@ on:
     branches: [ "main" ]
     paths: [ "**", "!**.md" ]
 env:
-  PACKAGE_NAME: "ghcr.io/archi-tektur/caddy-php"
-  PACKAGE_VERSION: "2.4.0"
+  PACKAGE_NAME: "ghcr.io/at-cloud-pro/caddy-php"
+  PACKAGE_VERSION: "3.0.0"
 jobs:
   release:
     runs-on: "ubuntu-22.04"
