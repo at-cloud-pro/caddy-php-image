@@ -69,7 +69,7 @@ Security updates will be released in both repositories for one year - until 2024
 This image was moved to AT Cloud organization at 2023-12-03. All previous versions are available in previous repository,
 with tag:
 ```dockerfile
-FROM ghcr.io/at-cloud-pro/caddy-php:2.3.0
+FROM ghcr.io/archi-tektur/caddy-php:2.3.0
 ```
 
 ## Changelog
