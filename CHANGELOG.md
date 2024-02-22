@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.0.0 (2024-02-22)
+### Changed
+- use alpine image to use much less space
+
+## 3.0.0 (2023-12-03)
+### Changed
+update PHP image to version 8.3
+
 ## 2.4.0 (2021-12-03)
 ### Changed
 - update PHP image to version 8.3
