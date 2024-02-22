@@ -1,53 +1,33 @@
-FROM php:8.3-fpm-bookworm AS rte
+FROM php:8.3-fpm-alpine3.19 AS rte
 
-# install caddy
-RUN apt-get update && apt-get install --yes --no-install-recommends \
-  apt-transport-https \
-  debian-archive-keyring \
-  debian-keyring \
-  gnupg2 \
-&& apt-get clean && rm -rf /var/lib/apt/lists/* \
-&& curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg \
-&& curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list \
-&& apt-get update && apt-get install --yes --no-install-recommends \
-  caddy \
-  mime-support \
-&& apt-get clean && rm -rf /var/lib/apt/lists/* \
-&& rm \
-  /etc/caddy/Caddyfile
+# Install Caddy
+RUN apk add --no-cache \
+    curl \
+    libcap \
+    mailcap \
+&& apk add caddy
 
 # install php extensions
-RUN rm \
-  /usr/local/etc/php-fpm.d/* \
-  /usr/local/etc/php/conf.d/* \
-&& apt-get update && apt-get install --yes --no-install-recommends \
-  libicu-dev \
-  libpq-dev \
-  libzip-dev \
-  unzip \
-  zip \
-  zlib1g-dev \
-&& apt-get clean && rm -rf /var/lib/apt/lists/* \
+RUN apk add --no-cache \
+    icu-dev \
+    postgresql-dev \
+    libzip-dev \
+    $PHPIZE_DEPS \
 && pecl install \
-  redis \
-  apcu \
-&& pecl clear-cache \
+    redis \
+    apcu \
 && docker-php-ext-install \
-  intl \
-  opcache \
-  pdo_mysql \
-  pdo_pgsql \
-  zip \
+    intl \
+    opcache \
+    pdo_mysql \
+    pdo_pgsql \
+    zip \
 && docker-php-ext-enable \
-  redis \
-  sodium \
-  apcu
+    redis \
+    sodium \
+    apcu
 
 # install composer
-RUN apt-get update  \
-&& apt-get install --yes --no-install-recommends git  \
-&& apt-get clean && rm -rf /var/lib/apt/lists/*
-
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 # configure caddy
@@ -82,7 +62,7 @@ ENV PHP_LOG_LEVEL="E_ERROR"
 # configure composer
 ENV COMPOSER_ALLOW_SUPERUSER="1"
 
-# entrypoing
+# entrypoint
 ENTRYPOINT []
 CMD ["bash", "-c", "php-fpm --daemonize && caddy run --config=/etc/caddy/Caddyfile"]
 EXPOSE 80 9000
@@ -93,8 +73,8 @@ WORKDIR /app
 FROM rte AS sdk
 
 # install xdebug
-RUN pecl install xdebug \
-&& pecl clear-cache \
+RUN apk add --no-cache $PHPIZE_DEPS linux-headers \
+&& pecl install xdebug  \
 && docker-php-ext-enable xdebug
 
 # configure xdebug

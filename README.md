@@ -5,7 +5,7 @@ This is a scaffold image of high-performance PHP server using Caddy and php-fpm 
 internal and external projects as it contains all the PHP server setup and configuration in one place.
 
 ## What's inside
-The package uses as a base `php:8.3-fpm-bookworm` image, and adds:
+The package uses as a base `php:8.3-alpine3.19` image, and adds:
 * fully-configured Caddy runner with php-fpm daemon
 * PHP extensions required by Symfony (`intl`, `pdo_mysql`, `pdo_pgsql`, `redis`, `sodium`)
 * PHP extensions required for maximum application performance (`opcache`, `zip`, `apcu`)
@@ -38,7 +38,7 @@ my-awesome-project
 Content of your Dockerfile:
 
 ```dockerfile
-FROM ghcr.io/at-cloud-pro/caddy-php:3.0.0 AS app
+FROM ghcr.io/at-cloud-pro/caddy-php:4.0.0 AS app
 
 COPY ./app /app
 
@@ -50,27 +50,6 @@ In Dockerfile shown above you're just copying `app` folder, and you're all set. 
 other actions that your application requires to run - it's extensive.
 
 Last line is recommended to avoid privilege issues on files created in container by other processes.
-
-## Versioning
-### Updating to v3.0.0
-This version is a major release, as it changes repository owner to public organization. This is a breaking change, as
-you need to change your Dockerfile to use new image name. Please update your Dockerfile to use new image name:
-```dockerfile
-FROM ghcr.io/at-cloud-pro/caddy-php:3.0.0
-```
-If your app was running stable on version `ghcr.io/at-cloud-pro/caddy-php:2.3.0` this update is non-breaking in terms of
-functionality, but it's recommended to update your Dockerfile to use new image name and follow new updates.
-
-PHP updates, Caddy updates and other updates will be released in this repository from now.
-
-Security updates will be released in both repositories for one year - until 2024-12-03.
-
-### Previous versions
-This image was moved to AT Cloud organization at 2023-12-03. All previous versions are available in previous repository,
-with tag:
-```dockerfile
-FROM ghcr.io/archi-tektur/caddy-php:2.3.0
-```
 
 ## Changelog
 Changelog is available [here](CHANGELOG.md). Please update changelog each time commission is made. I adapted
