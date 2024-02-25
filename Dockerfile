@@ -64,7 +64,7 @@ ENV COMPOSER_ALLOW_SUPERUSER="1"
 
 # entrypoint
 ENTRYPOINT []
-CMD ["bash", "-c", "php-fpm --daemonize && caddy run --config=/etc/caddy/Caddyfile"]
+CMD ["sh", "-c", "php-fpm --daemonize && caddy run --config=/etc/caddy/Caddyfile"]
 EXPOSE 80 9000
 HEALTHCHECK NONE
 WORKDIR /app
