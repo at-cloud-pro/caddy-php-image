@@ -13,7 +13,7 @@ jobs:
         uses: "docker/login-action@v2"
         with:
           registry: "ghcr.io"
-          username: "oskarbarcz"
+          username: "${{github.actor}}"
           password: "${{secrets.GITHUB_TOKEN}}"
       - name: "Set Git user"
         run: "git config --global user.name Github Actions && git config --global user.email github-actions@github.com"
