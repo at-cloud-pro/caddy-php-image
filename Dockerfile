@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine3.19 AS rte
+FROM php:8.4-fpm-alpine3.23 AS rte
 
 # Install Caddy
 RUN apk add --no-cache \
